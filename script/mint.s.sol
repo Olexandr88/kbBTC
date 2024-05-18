@@ -7,7 +7,7 @@ import "../src/wstBTC.sol";
 import "../src/offChainSignatureAggregator.sol";
 
 
-contract CounterScript is Script {
+contract MintScript is Script {
 
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
