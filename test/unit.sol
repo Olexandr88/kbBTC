@@ -3,8 +3,8 @@ pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
 
-import "../src/wstBTC.sol";
-import "../src/MockwstBTCV2.sol";
+import "../src/kbBTC.sol";
+import "../src/MockkbBTCV2.sol";
 import "../src/AddressesProvider.sol";
 import "../src/offChainSignatureAggregator.sol";
 
@@ -12,16 +12,16 @@ contract UnitTest is Test {
     address internal signer;
     uint256 internal signerPrivateKey;
     AddressesProvider internal ap;
-    wstBTC internal proxyToken;
+    kbBTC internal proxyToken;
     offChainSignatureAggregator internal agg;
     function setUp() public {
         signerPrivateKey = 0xA11CE;
         signer = vm.addr(signerPrivateKey);
         vm.startPrank(signer);
         ap = new AddressesProvider(signer);
-        wstBTC impl = new wstBTC(address(ap));
+        kbBTC impl = new kbBTC(address(ap));
         ap.setTokenImpl(address(impl));
-        proxyToken = wstBTC(ap.getToken());
+        proxyToken = kbBTC(ap.getToken());
         agg = new offChainSignatureAggregator(address(proxyToken));
         ap.updateAggregator(address(agg));
         address[] memory signers = new address[](1);
@@ -82,7 +82,7 @@ contract UnitTest is Test {
 
     function testUpgrade() public {
         vm.startPrank(signer);
-        MockwstBTCV2 newTokenImpl = new MockwstBTCV2(address(ap));
+        MockkbBTCV2 newTokenImpl = new MockkbBTCV2(address(ap));
         ap.setTokenImpl(address(newTokenImpl));
     }
 }
