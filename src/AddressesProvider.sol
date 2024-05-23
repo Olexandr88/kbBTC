@@ -12,14 +12,14 @@ contract AddressesProvider is Ownable(msg.sender) {
   mapping(bytes32 => address) private _addresses;
 
   // Main identifiers
-  bytes32 private constant TOKEN = 'wstBTC';
+  bytes32 private constant TOKEN = 'wkbBTC';
 
 
-event ProxyCreated(
-    bytes32 indexed id,
-    address indexed proxyAddress,
-    address indexed implementationAddress
-  );
+  event ProxyCreated(
+      bytes32 indexed id,
+      address indexed proxyAddress,
+      address indexed implementationAddress
+    );
 
   event AddressSet(bytes32 indexed id, address indexed oldAddress, address indexed newAddress);
 
@@ -40,12 +40,6 @@ event ProxyCreated(
     return _addresses[id];
   }
 
-  function setAddress(bytes32 id, address newAddress) external onlyOwner {
-    address oldAddress = _addresses[id];
-    _addresses[id] = newAddress;
-    emit AddressSet(id, oldAddress, newAddress);
-  }
-
   function setAddressAsProxy(
     bytes32 id,
     address newImplementationAddress
@@ -60,9 +54,7 @@ event ProxyCreated(
     emit TokenUpdated(newTokenImpl);
   }
 
-    function getToken() external view returns (address) {
-    return getAddress(TOKEN);
-  }
+
 
 
   function updateAggregator(address newAggregator) external onlyOwner {
@@ -81,7 +73,7 @@ event ProxyCreated(
   function _updateImpl(bytes32 id, address newAddress) internal {
     address proxyAddress = _addresses[id];
     // initialize with the address provider
-    bytes memory params = abi.encodeWithSignature('initialize(address)', address(this));
+    bytes memory params = abi.encodeWithSignature('initialize()');
 
     if (proxyAddress == address(0)) {
       address proxy = address(new ERC1967Proxy(newAddress, params));
@@ -90,6 +82,10 @@ event ProxyCreated(
     } else {
       IUpgradeableToken(proxyAddress).upgradeToAndCall(newAddress, params);
     }
+  }
+
+    function getToken() external view returns (address) {
+    return getAddress(TOKEN);
   }
 
 }

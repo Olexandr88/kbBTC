@@ -16,7 +16,6 @@ contract CounterScript is Script {
         address deployer = address(0x1);
         AddressesProvider ap = new AddressesProvider(deployer);
         wstBTC impl = new wstBTC(address(ap));
-        impl.initialize(address(ap));
         ap.setTokenImpl(address(impl));
         new offChainSignatureAggregator(address(ap.getToken()));
         vm.stopBroadcast(); 

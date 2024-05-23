@@ -4,20 +4,26 @@ pragma solidity ^0.8.13;
 import {Test, console2} from "forge-std/Test.sol";
 
 import "../src/wstBTC.sol";
+import "../src/MockwstBTCV2.sol";
+import "../src/AddressesProvider.sol";
 import "../src/offChainSignatureAggregator.sol";
 
-contract CounterTest is Test {
+contract UnitTest is Test {
     address internal signer;
     uint256 internal signerPrivateKey;
-    wstBTC internal c;
+    AddressesProvider internal ap;
+    wstBTC internal proxyToken;
     offChainSignatureAggregator internal agg;
     function setUp() public {
         signerPrivateKey = 0xA11CE;
         signer = vm.addr(signerPrivateKey);
         vm.startPrank(signer);
-        c = new wstBTC();
-        agg = new offChainSignatureAggregator(address(c));
-        c.updateAggregator(address(agg));
+        ap = new AddressesProvider(signer);
+        wstBTC impl = new wstBTC(address(ap));
+        ap.setTokenImpl(address(impl));
+        proxyToken = wstBTC(ap.getToken());
+        agg = new offChainSignatureAggregator(address(proxyToken));
+        ap.updateAggregator(address(agg));
         address[] memory signers = new address[](1);
         bool[] memory valids = new bool[](1);
         signers[0] = signer;
@@ -25,11 +31,13 @@ contract CounterTest is Test {
         agg.setSigners(signers, valids);
     }
 
-    function testMint() public {
+    function mint(address receiver, uint256 amount) public {
+        uint256 nonce = agg.nonce();
+        uint256 beforeBalance = proxyToken.balanceOf(receiver);
         offChainSignatureAggregator.Report memory report = offChainSignatureAggregator.Report({
-            receiver: signer,
-            amount: 100,
-            nonce: 1
+            receiver: receiver,
+            amount: amount,
+            nonce: nonce + 1
         }
             
         );
@@ -47,7 +55,34 @@ contract CounterTest is Test {
         );
         _rs[0] = rep;
         agg.mintBTC(report, _rs);
+        require(beforeBalance + amount == proxyToken.balanceOf(receiver));
+    }
 
-        //assertEq(IERC20(wstBTC.balanceOf(signer), 100);
+    function burn(address burner, uint256 amount) public {
+        require(proxyToken.balanceOf(burner) >= amount);
+        uint256 beforeBalance = proxyToken.balanceOf(burner);
+        vm.startPrank(burner);
+        string memory btcAddress = "tb1pap6uaw5y693cx69d0we2ex6ymclyr2k3esm30p32g20sa94aykrsgjcdec";
+        proxyToken.burn(amount, btcAddress);
+        require(beforeBalance - amount == proxyToken.balanceOf(burner));
+    }
+    function testMint() public {
+        address receiver = address(0x1);
+        uint256 amount = 1e18;
+        mint(receiver, amount);
+    }
+
+    function testBurn() public {
+        address receiver = address(0x1);
+        uint256 amount = 1e18;
+        mint(receiver, amount);
+        burn(receiver, amount);
+
+    }
+
+    function testUpgrade() public {
+        vm.startPrank(signer);
+        MockwstBTCV2 newTokenImpl = new MockwstBTCV2(address(ap));
+        ap.setTokenImpl(address(newTokenImpl));
     }
 }

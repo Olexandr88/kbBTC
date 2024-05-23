@@ -1,5 +1,4 @@
-pragma solidity ^0.8.21;
-
+pragma solidity 0.8.21;
 
 import {Ownable} from '@openzeppelin/access/Ownable.sol';
 
@@ -31,7 +30,7 @@ contract offChainSignatureAggregator is Ownable(msg.sender) {
         bytes32 s;
     }
 
-    constructor(address _wstBTC) public {
+    constructor(address _wstBTC) {
         DOMAIN_SEPARATOR = keccak256(
             abi.encode(
                 keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),

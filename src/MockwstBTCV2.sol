@@ -10,7 +10,7 @@ import {OwnableUpgradeable} from "@openzeppelin-upgradeable/access/OwnableUpgrad
 
 import {IAddressesProvider} from './interfaces/IAddressesProvider.sol';
 
-contract wstBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable  {
+contract MockwstBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable  {
 
     address public immutable provider;
     address public immutable token;
@@ -19,7 +19,7 @@ contract wstBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgr
 
     address public aggregator;
 
-    event RelayToBTCAddress(uint256 amount, string btcAddress);
+    event RelayToBTCAddress(uint256 amount, bytes btcAddress);
     event NewAggregator(address newAggregator);
     event NewRate(uint256 newRate);
     event NewSlash(uint256 newRate);
@@ -30,8 +30,8 @@ contract wstBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgr
         provider = _provider;
     }
 
-    function initialize() public initializer {
-        __ERC20_init("Kinza Babylon Staked BTC", "kbBTC");
+    function initialize() public reinitializer(2) {
+        __ERC20_init("Kinza Babylon Staked BTC V2", "kbBTC");
          __Ownable_init(provider);
         __UUPSUpgradeable_init();
         // require initialize call by provider
@@ -53,7 +53,7 @@ contract wstBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgr
     }
 
     // when u burn the token we would send it back to yr btc address
-    function burn(uint256 amount, string memory btcAddress) external {
+    function burn(uint256 amount, bytes memory btcAddress) external {
         _burn(msg.sender, amount);
 
         emit RelayToBTCAddress(amount, btcAddress);
