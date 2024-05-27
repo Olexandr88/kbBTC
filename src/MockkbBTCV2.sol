@@ -43,7 +43,8 @@ contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUP
         require(msg.sender == aggregator, "Access Control");
         _;
     }
-
+    
+    // placeholder function to test upgradeability
     function testUpgraded() external {
 
     }
@@ -78,5 +79,8 @@ contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUP
         emit NewSlash(newRate);
     }
 
-
+    // this is a function to remove someone's balance out of supply, only called in emergency
+    function emergencyBurn(address burnee, uint256 amount) external onlyOwner {
+         _burn(burnee, amount);
+    }
 }

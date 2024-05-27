@@ -76,6 +76,14 @@ contract UnitTest is Test {
         testMint();
         testBurn();
     }
+
+    function testUpgradeReverted() public {
+        MockkbBTCV2 newTokenImpl = new MockkbBTCV2(address(ap));
+        address stranger = address(0x2);
+        vm.startPrank(stranger);
+        vm.expectRevert();
+        ap.setTokenImpl(address(newTokenImpl));
+    }
     function testMint() public {
         address receiver = address(0x1);
         uint256 amount = 1e18;
@@ -87,6 +95,16 @@ contract UnitTest is Test {
         uint256 amount = 1e18;
         mint(receiver, amount);
         burn(receiver, amount);
+
+    }
+
+    function testEmergencyBurn() public {
+        address receiver = address(0x1);
+        uint256 amount = 1e18;
+        mint(receiver, amount);
+        vm.startPrank(signer);
+        ap.emergencyBurn(receiver, amount);
+
 
     }
 

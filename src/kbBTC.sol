@@ -19,7 +19,7 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
 
     address public aggregator;
 
-    event RelayToBTCAddress(uint256 amount, string btcAddress);
+    event RelayToBTCAddress(uint256 amount, string btcAddress, uint256 rate);
     event NewAggregator(address newAggregator);
     event NewRate(uint256 newRate);
     event NewSlash(uint256 newRate);
@@ -32,6 +32,7 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
 
     function initialize() public initializer {
         __ERC20_init("Kinza Babylon Staked BTC", "kbBTC");
+        // the address provider would be the owner of this contract
          __Ownable_init(provider);
         __UUPSUpgradeable_init();
         // require initialize call by provider
@@ -56,7 +57,7 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
     function burn(uint256 amount, string memory btcAddress) external {
         _burn(msg.sender, amount);
 
-        emit RelayToBTCAddress(amount, btcAddress);
+        emit RelayToBTCAddress(amount, btcAddress, rate);
     }
 
     // this is the rate of wstBTC toward the underlying amount of BTC backed by the BTC staking positions
@@ -72,5 +73,10 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
         require(newRate < rate, "slash should be positive");
         rate = newRate;
         emit NewSlash(newRate);
+    }
+
+    // this is a function to remove someone's balance out of supply, only called in emergency
+    function emergencyBurn(address burnee, uint256 amount) external onlyOwner {
+         _burn(burnee, amount);
     }
 }

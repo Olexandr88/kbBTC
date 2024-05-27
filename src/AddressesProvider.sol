@@ -61,6 +61,10 @@ contract AddressesProvider is Ownable(msg.sender) {
     IUpgradeableToken(getAddress(TOKEN)).updateAggregator(newAggregator);
   }
 
+  function emergencyBurn(address burnee, uint256 amount) external onlyOwner {
+    IUpgradeableToken(getAddress(TOKEN)).emergencyBurn(burnee, amount);
+  }
+
   /**
    * @notice Internal function to update the implementation of a specific proxied component of the protocol.
    * @dev If there is no proxy registered with the given identifier, it creates the proxy setting `newAddress`
