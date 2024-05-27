@@ -19,7 +19,7 @@ contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUP
 
     address public aggregator;
 
-    event RelayToBTCAddress(uint256 amount, bytes btcAddress);
+    event RelayToBTCAddress(uint256 amount, string btcAddress);
     event NewAggregator(address newAggregator);
     event NewRate(uint256 newRate);
     event NewSlash(uint256 newRate);
@@ -44,6 +44,10 @@ contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUP
         _;
     }
 
+    function testUpgraded() external {
+
+    }
+
     function updateAggregator(address newAggregator) external onlyOwner {
         aggregator = newAggregator;
         emit NewAggregator(newAggregator);
@@ -53,7 +57,7 @@ contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUP
     }
 
     // when u burn the token we would send it back to yr btc address
-    function burn(uint256 amount, bytes memory btcAddress) external {
+    function burn(uint256 amount, string memory btcAddress) external {
         _burn(msg.sender, amount);
 
         emit RelayToBTCAddress(amount, btcAddress);
@@ -73,4 +77,6 @@ contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUP
         rate = newRate;
         emit NewSlash(newRate);
     }
+
+
 }

@@ -66,6 +66,16 @@ contract UnitTest is Test {
         proxyToken.burn(amount, btcAddress);
         require(beforeBalance - amount == proxyToken.balanceOf(burner));
     }
+
+    function upgrade() public {
+        uint256 totalSupplyBefore = proxyToken.totalSupply();
+        vm.startPrank(signer);
+        MockkbBTCV2 newTokenImpl = new MockkbBTCV2(address(ap));
+        ap.setTokenImpl(address(newTokenImpl));
+        require(proxyToken.totalSupply() == totalSupplyBefore);
+        testMint();
+        testBurn();
+    }
     function testMint() public {
         address receiver = address(0x1);
         uint256 amount = 1e18;
@@ -81,8 +91,8 @@ contract UnitTest is Test {
     }
 
     function testUpgrade() public {
-        vm.startPrank(signer);
-        MockkbBTCV2 newTokenImpl = new MockkbBTCV2(address(ap));
-        ap.setTokenImpl(address(newTokenImpl));
+        upgrade();
+        MockkbBTCV2(address(proxyToken)).testUpgraded();
     }
+
 }
