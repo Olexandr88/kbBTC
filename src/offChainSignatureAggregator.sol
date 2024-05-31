@@ -61,11 +61,13 @@ contract offChainSignatureAggregator is Ownable(msg.sender) {
         bytes32 reportHash = reportDigest(_report);
         bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, reportHash));
         bytes32 r;
+
         for (uint i = 0; i < _rs.length; i++) {
             Signature memory s = _rs[i];
             address signer = ecrecover(digest, s.v, s.r, s.s);
             require(signers[signer], "unauthorized");
-            // signature duplication check using bytes32 r, sufficient.
+            // signature duplication check using bytes32 r, sufficient when sorted in ascending order.
+            require(uint256(s.r) >= uint256(r), "not sorted r");
             require(s.r != r, "non-unique signature");
             r = s.r;
       }
