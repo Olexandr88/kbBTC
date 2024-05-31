@@ -13,11 +13,12 @@ contract CounterScript is Script {
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
-        address deployer = address(0x1);
+        address deployer = address(0xCc3fBD1ff6E1e2404D0210823C78ae74085b6235);
         AddressesProvider ap = new AddressesProvider(deployer);
         kbBTC impl = new kbBTC(address(ap));
         ap.setTokenImpl(address(impl));
-        new offChainSignatureAggregator(address(ap.getToken()));
+        offChainSignatureAggregator agg = new offChainSignatureAggregator(address(ap.getToken()));
+        ap.updateAggregator(address(agg));
         vm.stopBroadcast(); 
     }
 }
