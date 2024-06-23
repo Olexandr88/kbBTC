@@ -1,66 +1,16 @@
-## Foundry
+## Kinza Babylon Staked BTC
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
-
-Foundry consists of:
-
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+** Liquid 1:1 backed ERC20 Token for Staked BTC in Babyyon **
 
 ## Documentation
 
-https://book.getfoundry.sh/
+Under the hook, Kinza use MPC Wallet Technology with Cobo to keep the fund and conduct Babylon staking.
+Then a ERC20 token (kbBTC) is minted to depositor, according to latest rate of conversion.
+kbBTC would then be integrated into our lending protocol for yield opportunity.
+When kbBTC is burnt to redeem, users need to specify a native btc address to receive the fund.
 
-## Usage
+## To Mint/Burn:
 
-### Build
+go to "https://feature-btc-staking.kinza-web.pages.dev/#/btc-staking" and deposit. (Testnet)
 
-```shell
-$ forge build
-```
 
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```

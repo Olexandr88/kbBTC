@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.21;
 
 import {Ownable} from '@openzeppelin/access/Ownable.sol';
@@ -56,7 +57,7 @@ contract AddressesProvider is Ownable(msg.sender) {
 
 
 
-
+  // TOKEN SPECIFIC FUNCTION
   function updateAggregator(address newAggregator) external onlyOwner {
     IUpgradeableToken(getAddress(TOKEN)).updateAggregator(newAggregator);
   }

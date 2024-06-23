@@ -1,10 +1,10 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
 
 import "../src/kbBTC.sol";
-import "../src/MockkbBTCV2.sol";
+import "../src/mock/MockkbBTCV2.sol";
 import "../src/AddressesProvider.sol";
 import "../src/offChainSignatureAggregator.sol";
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.21;
 
 import {ERC20} from "@openzeppelin/token/ERC20/ERC20.sol";
@@ -10,6 +10,7 @@ import {OwnableUpgradeable} from "@openzeppelin-upgradeable/access/OwnableUpgrad
 
 import {IAddressesProvider} from './interfaces/IAddressesProvider.sol';
 
+// implementation contrac† for kinza-babylon token
 contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable  {
 
     address public immutable provider;
@@ -38,6 +39,7 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
         // require initialize call by provider
     }
 
+    // override to limit the upgrade call to the owner (which is addressesProvider)
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     modifier onlyAggregator() {
@@ -53,15 +55,15 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
         _mint(to, amount);
     }
 
-    // when u burn the token we would send it back to yr btc address
+    // when users burn the token we would send the same amount * rate, back to the specified btc address
+    // if the btc address is in a wrong format we would need the user to contact us and provider proof of the evm address
     function burn(uint256 amount, string memory btcAddress) external {
         _burn(msg.sender, amount);
 
         emit RelayToBTCAddress(amount, btcAddress, rate);
     }
 
-    // this is the rate of wstBTC toward the underlying amount of BTC backed by the BTC staking positions
-    // it's expected to increase to reflect yield
+    // this is the rate of kbBTC toward the underlying amount of BTC backed by the BTC staking positions
     // on extreme occasion (where slashing happens), the rate is reduced.
     function updateYield(uint256 newRate) external onlyAggregator {
         require(newRate > rate, "yield should be positive");
