@@ -8,7 +8,7 @@ import {ERC20Upgradeable} from "@openzeppelin-upgradeable/token/ERC20/ERC20Upgra
 
 import {OwnableUpgradeable} from "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 
-import {IAddressesProvider} from './interfaces/IAddressesProvider.sol';
+import {IAddressesProvider} from '../interfaces/IAddressesProvider.sol';
 
 contract MockkbBTCV2 is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable  {
 

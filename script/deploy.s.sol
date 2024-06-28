@@ -13,7 +13,7 @@ contract CounterScript is Script {
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
-        address deployer = address(0xCc3fBD1ff6E1e2404D0210823C78ae74085b6235);
+        address deployer = address(0xDE6A2451A4ACeb6D540Bd216578C84503639EbF1);
         AddressesProvider ap = new AddressesProvider(deployer);
         kbBTC impl = new kbBTC(address(ap));
         ap.setTokenImpl(address(impl));
