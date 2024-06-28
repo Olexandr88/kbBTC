@@ -14,7 +14,6 @@ import {IAddressesProvider} from './interfaces/IAddressesProvider.sol';
 contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable  {
 
     address public immutable provider;
-    address public immutable token;
 
     uint256 public rate = 1e18;
 
@@ -27,7 +26,6 @@ contract kbBTC is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
 
     constructor(address _provider) {
         _disableInitializers();
-        token = IAddressesProvider(_provider).getToken();
         provider = _provider;
     }
 
