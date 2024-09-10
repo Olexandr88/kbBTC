@@ -14,6 +14,6 @@ When kbBTC is burnt to redeem, users need to specify a native btc address to rec
 
 ## To Mint/Burn:
 
-go to https://feature-btc-staking.kinza-web.pages.dev/#/btc-staking and deposit. (Testnet)
+go to https://feature-btc-staking.kinza-web.pages.dev/#/referral and deposit. (Testnet)
 
 
